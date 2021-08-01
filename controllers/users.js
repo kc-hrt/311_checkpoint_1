@@ -1,15 +1,18 @@
 const users = require('../data/index');
 
+// get users list
 const listUsers = (req, res) => res.json(users);
 
+// get user by id
 const showUser = (req, res) => {
   if (users.some(user => user.id === parseInt(req.params.id))) {
-    res.json(users.filter(users => users.id === parseInt(req.params.id))); 
+    res.json(users.filter(user => user.id === parseInt(req.params.id))); 
   } else {
     res.status(404).json({ 'Error Message': `404 - No user with id of ${req.params.id}`});
   }
 };
 
+// create a new user
 const createUser = (req, res) => {
   
   users.push({
@@ -39,6 +42,7 @@ const createUser = (req, res) => {
   res.json({'Requset Sucessful': 'User was updated!', users});
 };
 
+// update user by id
 const updateUser = (req, res) => {
   if(users.find(user => user.id === Number(req.params.id))){
       
@@ -60,23 +64,22 @@ const updateUser = (req, res) => {
               user.company.bs = req.body.company.bs ? req.body.company.bs : user.company.bs
               res.json({'Requset Sucessful': 'User was updated!', user});
           }
-      })
+      });
   } else{
 
-    res.status(400).json({'Error Message': `400 - No user with id of ${id}`});
+    res.status(400).json({'Error Message': `400 - No user with id of ${req.params.id}`});
   }
 };
 
+// Delete User by id
 const deleteUser = (req, res) => {
-    let id = req.params.id;
 
-    let match = users.filter(users => users.id === Number(id));
-
-    if(match){
-        res.json({'Request Sucessful': 'User has been deleted!', users: users.filter(user => user.id != Number(id))});
-    }else {
-        res.status(400).json({'Error Message': `No user found with ID ${id}`});
-    }
+  if (users.filter(user => user.id == req.params.id)) {
+    users.splice(users.filter(user => user.id == req.params.id)[0].id - 1, 1);
+    res.json({'Requset Sucessful': 'User was deleted!', users});
+  } else {
+    res.status(400).json({'Error Message': `400 - No user with id of ${req.params.id}`});
+  }
 };
 
 module.exports = { listUsers, showUser, createUser, updateUser, deleteUser };
