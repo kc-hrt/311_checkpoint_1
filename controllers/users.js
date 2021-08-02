@@ -45,23 +45,9 @@ const createUser = (req, res) => {
 // update user by id
 const updateUser = (req, res) => {
   if(users.find(user => user.id === Number(req.params.id))){
-      
       users.forEach(user => {
           if(user.id === Number(req.params.id)){
-              user.name = req.body.name ? req.body.name : user.name,
-              user.username = req.body.username ? req.body.username : user.username,
-              user.email= req.body.email ? req.body.email : user.email,
-              user.address.street = req.body.address.street ? req.body.address.street : user.address.street,
-              user.address.suite = req.body.address.suite ? req.body.address.suite : user.address.suite,
-              user.address.city = req.body.address.city ? req.body.address.city : user.address.city,
-              user.address.zipcode = req.body.address.zipcode ? req.body.address.zipcode : user.address.zipcode,
-              user.address.geo.lat = req.body.address.geo.lat ? req.body.address.geo.lat : user.address.geo.lat,
-              user.address.geo.lng = req.body.lng ? req.body.lng : user.address.geo.lng,
-              user.phone = req.body.phone ? req.body.phone : user.phone,
-              user.website = req.body.website ? req.body.website : user.website,
-              user.company.name = req.body.company.name ? req.body.company.name : user.company.name,
-              user.company.catchPhrase = req.body.company.catchPhrase ? req.body.company.catchPhrase : user.company.catchPhrase,
-              user.company.bs = req.body.company.bs ? req.body.company.bs : user.company.bs
+              user.isActive = 'false'
               res.json({'Requset Sucessful': 'User was updated!', user});
           }
       });
@@ -73,10 +59,13 @@ const updateUser = (req, res) => {
 
 // Delete User by id
 const deleteUser = (req, res) => {
-
   if (users.filter(user => user.id == req.params.id)) {
-    users.splice(users.filter(user => user.id == req.params.id)[0].id - 1, 1);
-    res.json({'Requset Sucessful': 'User was deleted!', users});
+    
+    users.forEach(user => {
+      if(user.id === Number(req.params.id)) {
+          user.isActive = 'false'
+          res.json({'Requset Sucessful': 'User was deleted!', user});
+      }});
   } else {
     res.status(400).json({'Error Message': `400 - No user with id of ${req.params.id}`});
   }
